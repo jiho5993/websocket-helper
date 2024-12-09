@@ -1,7 +1,6 @@
 import WebSocket, { PerMessageDeflateOptions } from 'ws';
 import http from 'http';
-import { isBoolean, isNull, isPositiveNumber, isUndefined } from './type.helper';
-import { isArray, isFullArray } from './array.helper';
+import * as _ from 'lodash';
 
 export type WebsocketState = 0 | 1 | 2 | 3;
 
@@ -64,7 +63,7 @@ export class WebsocketClient {
   }
 
   createRequestId(payload?: any): string | number {
-    if (isFullArray(payload)) {
+    if (Array.isArray(payload) && payload.length > 0) {
       if (payload[0]?.id) {
         return payload[0].id;
       }
@@ -79,7 +78,7 @@ export class WebsocketClient {
   }
 
   createRequestMessage(requestId: string | number, payload: any): string {
-    if (isFullArray(payload)) {
+    if (Array.isArray(payload) && payload.length > 0) {
       payload[0].id = requestId;
       return JSON.stringify(payload);
     }
@@ -117,7 +116,7 @@ export class WebsocketClient {
   }
 
   async sendReceiveMessage(payload: any): Promise<any> {
-    if (!this.isConnected() || isNull(this.client)) {
+    if (!this.isConnected() || _.isNull(this.client)) {
       throw new Error('Websocket is not connected');
     }
 
@@ -157,7 +156,7 @@ export class WebsocketClient {
     const result = JSON.parse(data);
 
     let id;
-    if (isArray(result)) {
+    if (Array.isArray(result)) {
       id = result[0].id;
     } else {
       id = result.id;
@@ -186,7 +185,7 @@ export class WebsocketClient {
   }
 
   private reconnect(): void {
-    if (isUndefined(this.reconnectConfig.attempts)) {
+    if (_.isUndefined(this.reconnectConfig.attempts)) {
       throw new Error('Reconnect attempts is not defined');
     }
 
@@ -215,14 +214,14 @@ export class WebsocketClient {
       attempts: DEFAULT_RECONNECT_ATTEMPTS,
     };
 
-    if (!isUndefined(config?.reconnectConfig)) {
-      if (isBoolean(config.reconnectConfig?.reconnect)) {
+    if (!_.isUndefined(config?.reconnectConfig)) {
+      if (_.isBoolean(config.reconnectConfig?.reconnect)) {
         reconnectConfig.reconnect = config.reconnectConfig.reconnect;
       }
-      if (isPositiveNumber(config.reconnectConfig?.delay)) {
+      if (_.isNumber(config.reconnectConfig?.delay) && config.reconnectConfig?.delay > 0) {
         reconnectConfig.delay = config.reconnectConfig.delay;
       }
-      if (isPositiveNumber(config.reconnectConfig?.attempts)) {
+      if (_.isNumber(config.reconnectConfig?.attempts) && config.reconnectConfig?.attempts > 0) {
         reconnectConfig.attempts = config.reconnectConfig.attempts;
       }
     }
@@ -232,7 +231,7 @@ export class WebsocketClient {
 
   private static getClientConfig(config: IClientConfig): IClientConfig {
     const clientConfig: IClientConfig = {
-      maxPayload: isPositiveNumber(config.maxPayload) ? config.maxPayload : DEFAULT_MAX_PAYLOAD,
+      maxPayload: _.isNumber(config.maxPayload) && config.maxPayload > 0 ? config.maxPayload : DEFAULT_MAX_PAYLOAD,
       ...config,
     };
 
