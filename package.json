@@ -1,0 +1,33 @@
+{
+  "name": "websocket-helper",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "rimraf lib",
+    "build": "npm run prebuild && tsc -p ./tsconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiho5993/websocket-helper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jiho5993/websocket-helper/issues"
+  },
+  "homepage": "https://github.com/jiho5993/websocket-helper#readme",
+  "description": "",
+  "devDependencies": {
+    "@types/lodash": "^4.17.13",
+    "@types/ws": "^8.5.13",
+    "rimraf": "^5.0.10",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "ws": "^8.18.0"
+  }
+}
