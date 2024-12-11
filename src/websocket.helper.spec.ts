@@ -65,7 +65,7 @@ describe('WebSocketHelper', () => {
     });
 
     describe('client 생성', () => {
-      it('connection이 이뤄지지 않았기 때문에 client 정보가 없다', () => {
+      it('connection이 이뤄지지 않았기 때문에 client 정보가 없다.', () => {
         const result = new WebsocketClient(url);
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -78,6 +78,9 @@ describe('WebSocketHelper', () => {
         const result = new WebsocketClient(url);
         await result.createConnection();
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        expect(result.client.readyState).toEqual(WebSocket.OPEN);expect(result.client.readyState).toEqual(WebSocket.OPEN);
         expect(result.isConnected()).toBeTruthy();
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -89,6 +92,15 @@ describe('WebSocketHelper', () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         expect(result.client._receiver._maxPayload).toEqual(DEFAULT_MAX_PAYLOAD);
+      });
+
+      it('createWithConnection 함수를 통해서 서버와 연결된 웹소켓 인스턴스를 생성할 수 있다.', async () => {
+        const result = await WebsocketClient.createWithConnection(url);
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        expect(result.client.readyState).toEqual(WebSocket.OPEN);
+        expect(result.isConnected()).toBeTruthy();
       });
     });
 
@@ -157,6 +169,10 @@ describe('WebSocketHelper', () => {
       const result = await WebsocketClient.createWithConnection(url);
 
       expect(result).toBeInstanceOf(WebsocketClient);
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      expect(result.client.readyState).toEqual(WebSocket.OPEN);
       expect(result.isConnected()).toBeTruthy();
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -183,6 +199,9 @@ describe('WebSocketHelper', () => {
       };
       const result = await WebsocketClient.createWithConnection(url, config);
 
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      expect(result.client.readyState).toEqual(WebSocket.OPEN);
       expect(result.isConnected()).toBeTruthy();
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
